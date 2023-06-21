@@ -5,9 +5,11 @@ int main(int ac, char **av)
 	int open_file, lines_in_file = 0, i = 0, save_line_size[BUFFER_SIZE], line_size = 0;
 	int current_line = 0;
 	ssize_t bytes_read, bytes_read2;
-	stack_t *current = NULL;
+	size_t j;
+	unsigned int line_number;
+	stack_t **stack = NULL;
 	char *file_text = NULL, *token = NULL, **split_text = NULL, buffer[BUFFER_SIZE];
-	char *file_cp = NULL;
+	char *file_cp = NULL, *current_opcode = NULL;
 	off_t size_of_file, reposition;
 	struct stat file_stat;
 	/* init vars */
@@ -121,7 +123,30 @@ int main(int ac, char **av)
 	}
 
 	/* STACKS START HERE */
-	for (i = 
+	current_opcode = "push";
+	for (i = 0; i < lines_in_file; i++)
+	{
+		line_number = 1;
+		for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
+		{
+			if (strcmp(current_opcode, opcodes[i].opcode) == 0)
+			{
+				 opcodes[i].f(&stack, line_number);
+				 break;
+			}
+		}
+		line_number++;
+
+	}
+	current_opcode = "pall";
+	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
+                 {       
+                        if (strcmp(current_opcode, opcodes[i].opcode) == 0)
+			{        
+                                  opcodes[i].f(&stack, line_number);
+                                  break;
+                         }
+			}
 
 	for (i = 0; i < lines_in_file; i++)
 	{

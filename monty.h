@@ -42,7 +42,15 @@ typedef struct instruction_s
 } instruction_t;
 
 
+instruction_t opcodes[] =
+{
+	{"push", push_opcode},
+	{"pall", pall_opcode}
+}
+
 /* Prototypes */
 char *_strdup(char *str);
+void push_opcode(stack_t **stack, unsigned int line_number);
+void pall_opcode(stack_t **stack, unsigned int line_number);
 
 #endif
