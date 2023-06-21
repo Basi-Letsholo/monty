@@ -3,13 +3,14 @@
 int main(int ac, char **av)
 {
 	int open_file, lines_in_file = 0, i = 0, save_line_size[BUFFER_SIZE], line_size = 0;
-	int current_line = 0;
+	int current_line = 0, count = 0, k;
 	ssize_t bytes_read, bytes_read2;
 	size_t j;
 	unsigned int line_number;
 	stack_t **stack = NULL;
 	char *file_text = NULL, *token = NULL, **split_text = NULL, buffer[BUFFER_SIZE];
-	char *file_cp = NULL, *current_opcode = NULL;
+	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
+	char **array_buff = NULL;
 	off_t size_of_file, reposition;
 	struct stat file_stat;
 	instruction_t opcodes[] = { 
@@ -107,10 +108,6 @@ int main(int ac, char **av)
 		/*errors and frees */
 		exit(EXIT_FAILURE);
 	}
-	printf("with spaces:\n%s\n", file_text);
-	file_text = rem_extraspace(file_text);
-	printf("No whitespace:\n%s\n", file_text);
-
 	file_cp = _strdup(file_text);
 	token = strtok(file_cp, "\n");
 	i = 0;
@@ -130,6 +127,44 @@ int main(int ac, char **av)
 		i++;
 		token = strtok(NULL, "\n");	
 	}
+
+
+	array_buff = malloc(sizeof(char *) * lines_in_file);
+	if (array_buff == NULL)
+	{
+		/* HANDLE ERROR */
+		exit(EXIT_FAILURE);
+	}
+	for (i = 0; split_text[i] != NULL; i++)
+	{
+		array_buff[i] = _strdup(split_text[i]);
+		count++;
+	}
+
+	array_text = malloc(sizeof(char *) * lines_in_file);
+	if (array_text == NULL)
+	{
+		/* HANDLE ERROR */
+		exit(EXIT_FAILURE);
+	}
+	k = 0;
+	for (i = 0; i < count; i++)
+	{
+		token = strtok(array_buff[i], " ");
+		while (token != NULL)
+		{
+			array_text[i] = malloc(strlen(token) + 1);
+			strcpy(array_text[k], token);
+			k++;
+			token = strtok(NULL, " ");
+		}
+	}
+
+	for (i = 0; i < lines_in_file; i++)
+	{
+		printf("%s\n", array_text[i]);
+	}
+
 /*	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("Line %d: %s\n", i, split_text[i]);
