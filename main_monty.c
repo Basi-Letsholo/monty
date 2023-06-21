@@ -5,8 +5,9 @@ int main(int ac, char **av)
 	int open_file, lines_in_file = 0, i = 0, save_line_size[BUFFER_SIZE], line_size = 0;
 	int current_line = 0;
 	ssize_t bytes_read, bytes_read2;
-/*	stack_t *current = NULL;*/
+	stack_t *current = NULL;
 	char *file_text = NULL, *token = NULL, **split_text = NULL, buffer[BUFFER_SIZE];
+	char *file_cp = NULL;
 	off_t size_of_file, reposition;
 	struct stat file_stat;
 	/* init vars */
@@ -93,23 +94,24 @@ int main(int ac, char **av)
 	{
 		printf("size per line, %d: %d\n", i, save_line_size[i]);
 	}
-	for (i = 0; i < lines_in_file; i++)
-	{
-		split_text[i] = malloc(sizeof(char) * (save_line_size[i] + 1));
-		if (split_text[i] == NULL)
-		{
-			/* STDERR MSG */
-			close(open_file);
-			free(file_text);
-			exit(EXIT_FAILURE);
-		}
-	}
-	token = strtok(file_text, "\n");
+	split_text = malloc(sizeof(char *) * lines_in_file);
+
+	file_cp = _strdup(file_text);
+	token = strtok(file_cp, "\n");
 	i = 0;
 	while (token != NULL)
 	{
+		split_text[i] = malloc(strlen(token) + 1);
+		if (split_text[i] == NULL)
+		{
+			/* STD ERR MSG */
+			close(open_file);
+			free(split_text);
+			free(file_text);
+			exit(EXIT_FAILURE);
+		}
+
 		strcpy(split_text[i], token);
-/*		split_text[i] = token;*/
 		i++;
 		token = strtok(NULL, "\n");	
 	}
@@ -118,13 +120,15 @@ int main(int ac, char **av)
 		printf("Line %d: %s\n", i, split_text[i]);
 	}
 
-	close(open_file);
+	/* STACKS START HERE */
+	for (i = 
 
 	for (i = 0; i < lines_in_file; i++)
 	{
 		free(split_text[i]);
 	}
 	free(file_text);
+	close(open_file);
 	return (0);
 	/* change later?? */
 }

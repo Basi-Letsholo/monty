@@ -43,6 +43,6 @@ typedef struct instruction_s
 
 
 /* Prototypes */
-
+char *_strdup(char *str);
 
 #endif
