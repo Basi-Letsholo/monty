@@ -1,11 +1,14 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+#define BUFFER_SIZE 4096
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <string.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
