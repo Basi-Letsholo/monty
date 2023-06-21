@@ -46,5 +46,5 @@ typedef struct instruction_s
 char *_strdup(char *str);
 void push_opcode(stack_t **stack, unsigned int line_number);
 void pall_opcode(stack_t **stack, unsigned int line_number);
-
+char *rem_extraspace(char *input);
 #endif

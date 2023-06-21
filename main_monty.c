@@ -18,6 +18,7 @@ int main(int ac, char **av)
 	};
 	/* init vars */
 	(void)reposition;
+	(void)save_line_size;
 
 	if (ac != 2)
 	{
@@ -96,11 +97,19 @@ int main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 
-	for (i = 0; i < lines_in_file; i++)
+/*	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("size per line, %d: %d\n", i, save_line_size[i]);
-	}
+	}*/
 	split_text = malloc(sizeof(char *) * lines_in_file);
+	if (split_text == NULL)
+	{
+		/*errors and frees */
+		exit(EXIT_FAILURE);
+	}
+	printf("with spaces:\n%s\n", file_text);
+	file_text = rem_extraspace(file_text);
+	printf("No whitespace:\n%s\n", file_text);
 
 	file_cp = _strdup(file_text);
 	token = strtok(file_cp, "\n");
