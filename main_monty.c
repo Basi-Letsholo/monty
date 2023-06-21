@@ -12,6 +12,10 @@ int main(int ac, char **av)
 	char *file_cp = NULL, *current_opcode = NULL;
 	off_t size_of_file, reposition;
 	struct stat file_stat;
+	instruction_t opcodes[] = { 
+	{"push", push_opcode},
+	{"pall", pall_opcode}
+	};
 	/* init vars */
 	(void)reposition;
 
@@ -34,7 +38,7 @@ int main(int ac, char **av)
 	}
 
 	/* DELETE NEXT LINE */
-	printf("file size = %ld\n", size_of_file);
+/*	printf("file size = %ld\n", size_of_file);*/
 
 	file_text = malloc(size_of_file + 1);
 	if (file_text == NULL)
@@ -63,9 +67,9 @@ int main(int ac, char **av)
 	}
 
 	/* DELETE NEXT LINE */
-	printf("File read: %s\n", file_text);
+/*	printf("File read: %s\n", file_text);
 	printf("Lines: %d\n", lines_in_file);
-
+*/
 /*	file_cp = strdup(file_text, 5);*/
 
 	reposition = lseek(open_file, 0, SEEK_SET);
@@ -117,36 +121,49 @@ int main(int ac, char **av)
 		i++;
 		token = strtok(NULL, "\n");	
 	}
-	for (i = 0; i < lines_in_file; i++)
+/*	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("Line %d: %s\n", i, split_text[i]);
 	}
+*/
+	/* STACKS START HERE , and so do mem issues */
 
-	/* STACKS START HERE */
-	current_opcode = "push";
 	for (i = 0; i < lines_in_file; i++)
 	{
-		line_number = 1;
-		for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
-		{
-			if (strcmp(current_opcode, opcodes[i].opcode) == 0)
-			{
-				 opcodes[i].f(&stack, line_number);
-				 break;
-			}
-		}
-		line_number++;
 
-	}
-	current_opcode = "pall";
+	strncpy(split_text[i], current_opcode, 4);
+/*	printf("Test!\nopcode: %s\n", current_opcode);*/
+
+		for (i = 0; i < lines_in_file; i++)
+		{	
+			line_number = 1;
+			for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
+			{
+				if (strcmp(current_opcode, opcodes[i].opcode) == 0)
+				{
+					 opcodes[i].f(stack, line_number);
+					 break;
+				}
+			}
+			line_number++;
+
+		}
+/*	current_opcode = "pall";
 	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
                  {       
                         if (strcmp(current_opcode, opcodes[i].opcode) == 0)
 			{        
-                                  opcodes[i].f(&stack, line_number);
+                                  opcodes[i].f(stack, line_number);
                                   break;
                          }
-			}
+			}*/
+	}
+
+	while (*stack != NULL)
+	{
+		free(*stack);
+		*stack = (*stack)->next;
+	}
 
 	for (i = 0; i < lines_in_file; i++)
 	{

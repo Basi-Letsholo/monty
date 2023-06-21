@@ -26,10 +26,10 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 	}
 	*stack = new;
 
-	if (*stack == new)
+/*	if (*stack == new)
 	{
 		return (*stack);
-	}
+	}*/
 }
 
 /**
@@ -44,6 +44,8 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 
 void pall_opcode(stack_t **stack, unsigned int line_number)
 {
+	(void)line_number;
+
 	if (*stack == NULL)
 	{
 		return;
@@ -51,7 +53,7 @@ void pall_opcode(stack_t **stack, unsigned int line_number)
 
 	while (*stack != NULL)
 	{
-		printf("%d\n", stack->n);
-		stack = stack->next;
+		printf("%d\n", (*stack)->n);
+		*stack = (*stack)->next;
 	}
 }
