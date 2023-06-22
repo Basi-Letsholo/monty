@@ -2,13 +2,11 @@
 
 int main(int ac, char **av)
 {
-	int open_file, lines_in_file = 0, i = 0, save_line_size[BUFFER_SIZE], line_size = 0;
-	int current_line = 0, count = 0, k;
-	ssize_t bytes_read, bytes_read2;
+	int open_file, lines_in_file = 0, i = 0, count = 0, k, *save_line_size = NULL;
 	size_t j;
 	unsigned int line_number;
 	stack_t **stack = NULL;
-	char *file_text = NULL, *token = NULL, **split_text = NULL, buffer[BUFFER_SIZE];
+	char *file_text = NULL, *token = NULL, **split_text = NULL;
 	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
 	char **array_buff = NULL;
 	off_t size_of_file, reposition;
@@ -27,12 +25,7 @@ int main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 
-	open_file = open(av[1], O_RDONLY);
-	if (open_file == -1)
-	{
-		/* STDERR */
-		exit(EXIT_FAILURE);
-	}
+	open_file = _open(av[1]);
 
 	if (stat(av[1], &file_stat) == 0)
 	{
@@ -45,67 +38,32 @@ int main(int ac, char **av)
 	file_text = malloc(size_of_file + 1);
 	if (file_text == NULL)
 	{
-		/* STDERR MSG */
+		fprintf(stderr, "Error: malloc failed\n");
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
-	while ((bytes_read = read(open_file, file_text, size_of_file)) > 0)
-	{
-		for (i = 0; i < size_of_file; i++)
-		{
-			if (file_text[i] == '\n')
-			{
-				lines_in_file++;
-			}
-			
-		}
-	}
-	if (bytes_read == -1)
-	{
-		/* STDERR MSG */
-		close(open_file);
-		free(file_text);
-		exit(EXIT_FAILURE);
-	}
+
+	lines_in_file = read_file(open_file, size_of_file, file_text);
 
 	/* DELETE NEXT LINE */
 /*	printf("File read: %s\n", file_text);
 	printf("Lines: %d\n", lines_in_file);
 */
-/*	file_cp = strdup(file_text, 5);*/
 
-	reposition = lseek(open_file, 0, SEEK_SET);
-	while ((bytes_read2 = read(open_file, buffer, BUFFER_SIZE)) > 0)
-	{
-		for (i = 0; i < bytes_read2; i++)
-		{
-			if (buffer[i] != '\n')
-			{
-				line_size++;
-			}
-			else
-			{
-				save_line_size[current_line++] = line_size;
-				line_size = 0;
-			}
-		}
-	}
-	if (bytes_read2 == -1)
-	{
-		/* STDERR MSG */
-		close(open_file);
-		free(file_text);
-		exit(EXIT_FAILURE);
-	}
+	save_line_size = size_by_line(open_file, lines_in_file, file_text); 
 
-/*	for (i = 0; i < lines_in_file; i++)
+	/* CONTINUE HERE */
+
+	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("size per line, %d: %d\n", i, save_line_size[i]);
-	}*/
+	}
 	split_text = malloc(sizeof(char *) * lines_in_file);
 	if (split_text == NULL)
 	{
 		/*errors and frees */
+		free(save_line_size);
+		close(open_file);
 		exit(EXIT_FAILURE);
 	}
 	file_cp = _strdup(file_text);
@@ -117,9 +75,10 @@ int main(int ac, char **av)
 		if (split_text[i] == NULL)
 		{
 			/* STD ERR MSG */
-			close(open_file);
 			free(split_text);
 			free(file_text);
+			free(save_line_size);
+			close(open_file);
 			exit(EXIT_FAILURE);
 		}
 
@@ -175,8 +134,8 @@ int main(int ac, char **av)
 	for (i = 0; i < lines_in_file; i++)
 	{
 
-	strncpy(split_text[i], current_opcode, 4);
-/*	printf("Test!\nopcode: %s\n", current_opcode);*/
+		strncpy(split_text[i], current_opcode, 4);
+/*		printf("Test!\nopcode: %s\n", current_opcode);*/
 
 		for (i = 0; i < lines_in_file; i++)
 		{	
@@ -214,6 +173,7 @@ int main(int ac, char **av)
 		free(split_text[i]);
 	}
 	free(file_text);
+	free(save_line_size);
 	close(open_file);
 	return (0);
 	/* change later?? */

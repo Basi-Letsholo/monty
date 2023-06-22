@@ -47,4 +47,8 @@ char *_strdup(char *str);
 void push_opcode(stack_t **stack, unsigned int line_number);
 void pall_opcode(stack_t **stack, unsigned int line_number);
 char *rem_extraspace(char *input);
+int _open(char *filename);
+int read_file(int open_file, off_t size_of_file, char *file_text);
+int *size_by_line(int open_file, int lines_in_file, char *file_text);
+
 #endif
