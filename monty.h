@@ -2,6 +2,7 @@
 #define MONTY_H
 
 #define BUFFER_SIZE 4096
+#define _POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,5 +51,6 @@ char *rem_extraspace(char *input);
 int _open(char *filename);
 int read_file(int open_file, off_t size_of_file, char *file_text);
 int *size_by_line(int open_file, int lines_in_file, char *file_text);
+void free_ptr(char **ptr);
 
 #endif

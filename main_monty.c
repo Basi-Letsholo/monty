@@ -2,22 +2,24 @@
 
 int main(int ac, char **av)
 {
-	int open_file, lines_in_file = 0, i = 0, count = 0, k, *save_line_size = NULL;
+	int open_file, lines_in_file = 0, i = 0, k, l, *save_line_size = NULL;
 	size_t j;
 	unsigned int line_number;
-	stack_t **stack = NULL;
-	char *file_text = NULL, *token = NULL, **split_text = NULL;
-	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
+/*	stack_t **stack = NULL;*/
+	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
+	char *file_cp = NULL, *current_opcode = NULL, ***array_text = NULL;
 	char **array_buff = NULL;
-	off_t size_of_file, reposition;
+	off_t size_of_file;
 	struct stat file_stat;
-	instruction_t opcodes[] = { 
+	int mem_count = 0; /* DELETE LATER!! USE to find out how much mem needs to be freed at each point */
+/*	instruction_t opcodes[] = { 
 	{"push", push_opcode},
 	{"pall", pall_opcode}
-	};
+	};*/
 	/* init vars */
-	(void)reposition;
-	(void)save_line_size;
+	(void)j;
+	(void)line_number;
+	(void)current_opcode;
 
 	if (ac != 2)
 	{
@@ -32,10 +34,8 @@ int main(int ac, char **av)
 		size_of_file = file_stat.st_size;
 	}
 
-	/* DELETE NEXT LINE */
-/*	printf("file size = %ld\n", size_of_file);*/
-
 	file_text = malloc(size_of_file + 1);
+	mem_count += 1;
 	if (file_text == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
@@ -44,38 +44,41 @@ int main(int ac, char **av)
 	}
 
 	lines_in_file = read_file(open_file, size_of_file, file_text);
-
-	/* DELETE NEXT LINE */
-/*	printf("File read: %s\n", file_text);
-	printf("Lines: %d\n", lines_in_file);
-*/
-
 	save_line_size = size_by_line(open_file, lines_in_file, file_text); 
+	mem_count += 1;
 
-	/* CONTINUE HERE */
-
-	for (i = 0; i < lines_in_file; i++)
+/*	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("size per line, %d: %d\n", i, save_line_size[i]);
 	}
+*/
 	split_text = malloc(sizeof(char *) * lines_in_file);
 	if (split_text == NULL)
 	{
-		/*errors and frees */
+		fprintf(stderr, "Error: malloc failed\n");
+		free(file_text);
 		free(save_line_size);
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
-	file_cp = _strdup(file_text);
+	mem_count += 1;
+
+	file_cp = strdup(file_text);
+	mem_count += 1;
+
 	token = strtok(file_cp, "\n");
+	mem_count+= 1;
+
 	i = 0;
 	while (token != NULL)
 	{
 		split_text[i] = malloc(strlen(token) + 1);
 		if (split_text[i] == NULL)
 		{
-			/* STD ERR MSG */
+			fprintf(stderr, "Error: malloc failed\n");
 			free(split_text);
+			free(file_cp);
+			free(token);
 			free(file_text);
 			free(save_line_size);
 			close(open_file);
@@ -87,56 +90,84 @@ int main(int ac, char **av)
 		token = strtok(NULL, "\n");	
 	}
 
-
 	array_buff = malloc(sizeof(char *) * lines_in_file);
 	if (array_buff == NULL)
 	{
-		/* HANDLE ERROR */
+		fprintf(stderr, "Error: malloc failed\n");
+		free(file_cp);
+		free(token);
+		free(file_text);
+		free(save_line_size);
+		free_ptr(split_text);
+		close(open_file);
 		exit(EXIT_FAILURE);
 	}
+
+	mem_count += 1;
+
 	for (i = 0; split_text[i] != NULL; i++)
 	{
-		array_buff[i] = _strdup(split_text[i]);
-		count++;
+		array_buff[i] = strdup(split_text[i]);
 	}
 
 	array_text = malloc(sizeof(char *) * lines_in_file);
 	if (array_text == NULL)
 	{
-		/* HANDLE ERROR */
+		fprintf(stderr, "Error: malloc failed\n");
+		free(file_cp);
+		free(token);
+		free(file_text);
+		free(save_line_size);
+		free_ptr(split_text);
+		free_ptr(array_buff);
+		close(open_file);
 		exit(EXIT_FAILURE);
 	}
+	mem_count += 1;
+
+	printf("test\n");
 	k = 0;
-	for (i = 0; i < count; i++)
+	for (i = 0; i < lines_in_file; i++)
 	{
-		token = strtok(array_buff[i], " ");
+		token2 = strtok(array_buff[i], " ");
 		while (token != NULL)
 		{
-			array_text[i] = malloc(strlen(token) + 1);
-			strcpy(array_text[k], token);
+			array_text[k] = malloc(strlen(token) + 1);
+			if (array_text[k] == NULL)
+			{
+				/* ERROR HANDLING */
+			}
+			for (l = 0; l < save_line_size[k] ;l++)
+			{
+				array_text = malloc(save_line_size[k]);
+				strcpy(array_text[k][l], token2);
+			}
 			k++;
-			token = strtok(NULL, " ");
+			token2 = strtok(NULL, " ");
+		}
+	}
+	for (i = 0; i < lines_in_file; i++)
+	{
+		for (k = 0; k < save_line_size[i]; k++)
+		{
+			printf("%s\n", array_text[i][k]);
 		}
 	}
 
 	for (i = 0; i < lines_in_file; i++)
 	{
-		printf("%s\n", array_text[i]);
+		printf("Line %d: %s\n", i, split_text[i]);
 	}
+
+	/* STACKS START HERE , and so do mem issues */
 
 /*	for (i = 0; i < lines_in_file; i++)
 	{
-		printf("Line %d: %s\n", i, split_text[i]);
-	}
-*/
-	/* STACKS START HERE , and so do mem issues */
-
-	for (i = 0; i < lines_in_file; i++)
-	{
 
 		strncpy(split_text[i], current_opcode, 4);
+*/
 /*		printf("Test!\nopcode: %s\n", current_opcode);*/
-
+/*
 		for (i = 0; i < lines_in_file; i++)
 		{	
 			line_number = 1;
@@ -151,6 +182,7 @@ int main(int ac, char **av)
 			line_number++;
 
 		}
+*/
 /*	current_opcode = "pall";
 	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
                  {       
@@ -159,22 +191,24 @@ int main(int ac, char **av)
                                   opcodes[i].f(stack, line_number);
                                   break;
                          }
-			}*/
+		}
 	}
-
-	while (*stack != NULL)
+*/
+/*	while (*stack != NULL)
 	{
 		free(*stack);
 		*stack = (*stack)->next;
 	}
+*/
 
-	for (i = 0; i < lines_in_file; i++)
-	{
-		free(split_text[i]);
-	}
+	free_ptr(split_text);
+	/*free_ptr(array_text);*/
+	free_ptr(array_buff);
 	free(file_text);
 	free(save_line_size);
+	/* Later - write func to free everything at once */
 	close(open_file);
+
 	return (0);
 	/* change later?? */
 }
