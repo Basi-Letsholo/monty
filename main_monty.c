@@ -11,10 +11,10 @@ int main(int ac, char **av)
 	off_t size_of_file;
 	struct stat file_stat;
 	int mem_count = 0; /* DELETE LATER!! USE to find out how much mem needs to be freed at each point */
-	instruction_t opcodes[] = { 
+/*	instruction_t opcodes[] = { 
 	{"push", push_opcode},
 	{"pall", pall_opcode}
-	};
+	};*/
 	/* init vars */
 	(void)j;
 	(void)line_number;
@@ -132,19 +132,35 @@ int main(int ac, char **av)
 
 	for (i = 0; i < new_num_lines; i++)
 	{
+		if (strcmp(array_text[i], "push") == 0)
+		{
+			push_opcode(stack, atoi(array_text[i + 1]));
+			i += 1;
+		}
+		else if (strcmp(array_text[i], "pall") == 0)
+		{
+			 pall_opcode(stack, 0);
+		}
+		else
+		{
+			i += 1;
+		}
+	}
+/*	for (i = 0; i < new_num_lines; i++)
+	{
 
 		strncpy(array_text[i], current_opcode, 4);
 
 		printf("Test!\nopcode: %s\n", current_opcode);
 
-		for (i = 0; i < new_num_lines; i++)
+		for (k = 0; k < new_num_lines; k++)
 		{	
 			line_number = 1;
 			for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
 			{
-				if (strcmp(current_opcode, opcodes[i].opcode) == 0)
+				if (strcmp(current_opcode, opcodes[j].opcode) == 0)
 				{
-					 opcodes[i].f(stack, line_number);
+					 opcodes[k].f(stack, line_number);
 					 break;
 				}
 			}
@@ -152,7 +168,7 @@ int main(int ac, char **av)
 
 		}
 	}
-
+*/
 /*	current_opcode = "pall";
 	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
                  {       
