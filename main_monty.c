@@ -71,6 +71,10 @@ int main(int ac, char **av)
 	token = strtok(file_cp, "\n");
 	mem_count+= 1;
 
+	for (i = 0; i < lines_in_file; i++)
+	{
+		split_text[i] = NULL;
+	}
 	i = 0;
 	while (token != NULL)
 	{
