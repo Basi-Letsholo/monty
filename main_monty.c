@@ -2,20 +2,19 @@
 
 int main(int ac, char **av)
 {
-	int open_file, lines_in_file = 0, i = 0, k, *save_line_size = NULL;
+	int open_file, lines_in_file = 0, i = 0, k, *save_line_size = NULL, new_num_lines;
 	size_t j;
 	unsigned int line_number;
-/*	stack_t **stack = NULL;*/
+	stack_t **stack = NULL;
 	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
 	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
-/*	char **array_buff = NULL;*/
 	off_t size_of_file;
 	struct stat file_stat;
 	int mem_count = 0; /* DELETE LATER!! USE to find out how much mem needs to be freed at each point */
-/*	instruction_t opcodes[] = { 
+	instruction_t opcodes[] = { 
 	{"push", push_opcode},
 	{"pall", pall_opcode}
-	};*/
+	};
 	/* init vars */
 	(void)j;
 	(void)line_number;
@@ -48,7 +47,6 @@ int main(int ac, char **av)
 	mem_count += 1;
 
 	file_text[size_of_file] = '\0';
-	printf("%s\n", file_text);
 	split_text = malloc(sizeof(char *) * lines_in_file);
 	if (split_text == NULL)
 	{
@@ -91,42 +89,7 @@ int main(int ac, char **av)
 		i++;
 		token = strtok(NULL, "\n");	
 	}	
-
-/*	array_buff = malloc(sizeof(char *) * lines_in_file);
-	if (array_buff == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		free(file_cp);
-		free(token);
-		free(file_text);
-		free(save_line_size);
-		free_ptr(split_text);
-		close(open_file);
-		exit(EXIT_FAILURE);
-	}
-	mem_count += 1;
-
-	for (i = 0; i < lines_in_file; i++)
-	{
-		array_buff[i] = NULL;
-	}
-	for (i = 0; i < lines_in_file; i++)
-	{
-		array_buff[i] = malloc(strlen(split_text[i]) + 1);
-		if (array_buff[i] == NULL)
-		{
-			fprintf(stderr, "Error: malloc failed\n");
-			free(file_cp);
-			free(token);
-			free(file_text);
-			free(save_line_size);
-			free_ptr(split_text);
-			close(open_file);
-			exit(EXIT_FAILURE);
-		}
-		strcpy(array_buff[i], split_text[i]);
-	}
-*/	
+	
 	array_text = malloc(sizeof(char *) * lines_in_file * 2);
 	if (array_text == NULL)
 	{
@@ -158,28 +121,23 @@ int main(int ac, char **av)
 			k++;
 			token2 = strtok(NULL, " ");
 		}
-/*		array_text[k] = NULL;*/
 	}
-	for (i = 0; i < k; i++)
+	new_num_lines = k;
+	for (i = 0; i < new_num_lines; i++)
 	{
 		printf("%s\n", array_text[i]);
 	}
 
-/*	for (i = 0; i < lines_in_file; i++)
-	{
-		printf("Line %d: %s\n", i, split_text[i]);
-	}
-*/
 	/* STACKS START HERE , and so do mem issues */
 
-/*	for (i = 0; i < lines_in_file; i++)
+	for (i = 0; i < new_num_lines; i++)
 	{
 
-		strncpy(split_text[i], current_opcode, 4);
-*/
-/*		printf("Test!\nopcode: %s\n", current_opcode);*/
-/*
-		for (i = 0; i < lines_in_file; i++)
+		strncpy(array_text[i], current_opcode, 4);
+
+		printf("Test!\nopcode: %s\n", current_opcode);
+
+		for (i = 0; i < new_num_lines; i++)
 		{	
 			line_number = 1;
 			for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
@@ -193,7 +151,8 @@ int main(int ac, char **av)
 			line_number++;
 
 		}
-*/
+	}
+
 /*	current_opcode = "pall";
 	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
                  {       
