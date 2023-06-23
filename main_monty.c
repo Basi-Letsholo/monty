@@ -44,16 +44,11 @@ int main(int ac, char **av)
 	}
 
 	lines_in_file = read_file(open_file, size_of_file, file_text);
-	file_text[lines_in_file] = '\0';
-
 	save_line_size = size_by_line(open_file, lines_in_file, file_text); 
 	mem_count += 1;
 
-/*	for (i = 0; i < lines_in_file; i++)
-	{
-		printf("size per line, %d: %d\n", i, save_line_size[i]);
-	}
-*/
+	file_text[size_of_file] = '\0';
+
 	split_text = malloc(sizeof(char *) * lines_in_file);
 	if (split_text == NULL)
 	{
@@ -95,7 +90,7 @@ int main(int ac, char **av)
 		strcpy(split_text[i], token);
 		i++;
 		token = strtok(NULL, "\n");	
-	}
+	}	
 
 /*	array_buff = malloc(sizeof(char *) * lines_in_file);
 	if (array_buff == NULL)
@@ -147,7 +142,6 @@ int main(int ac, char **av)
 	}
 	mem_count += 1;
 
-	printf("test\n");
 	k = 0;
 	for (i = 0; i < lines_in_file; i++)
 	{
@@ -161,14 +155,14 @@ int main(int ac, char **av)
 				exit(EXIT_FAILURE);
 			}
 			strcpy(array_text[k], token2);
-			token2 = strtok(NULL, " ");
 			k++;
+			token2 = strtok(NULL, " ");
 		}
-		
+		array_text[k] = NULL;
 	}
 	for (i = 0; i < k; i++)
 	{
-			printf("%s\n", array_text[i]);
+		printf("%s\n", array_text[i]);
 	}
 
 /*	for (i = 0; i < lines_in_file; i++)
