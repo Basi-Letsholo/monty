@@ -2,7 +2,7 @@
 
 int main(int ac, char **av)
 {
-	int open_file, lines_in_file = 0, i = 0, k, l, *save_line_size = NULL;
+	int open_file, lines_in_file = 0, i = 0, k, *save_line_size = NULL;
 	size_t j;
 	unsigned int line_number;
 /*	stack_t **stack = NULL;*/
@@ -102,9 +102,12 @@ int main(int ac, char **av)
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
-
 	mem_count += 1;
 
+	for (i = 0; i < lines_in_file; i++)
+	{
+		printf("Lines: %s\n", array_buff[i]);
+	}
 	for (i = 0; split_text[i] != NULL; i++)
 	{
 		array_buff[i] = strdup(split_text[i]);
@@ -129,36 +132,26 @@ int main(int ac, char **av)
 	k = 0;
 	for (i = 0; i < lines_in_file; i++)
 	{
-		token2 = strtok(array_buff[i], " ");
-		while (token != NULL)
+		token2 = strtok(split_text[i], " ");
+		while (token2 != NULL)
 		{
-			array_text[k] = malloc(strlen(token) + 1);
-			if (array_text[k] == NULL)
-			{
-				/* ERROR HANDLING */
-			}
-			for (l = 0; l < save_line_size[k] ;l++)
-			{
-				array_text = malloc(save_line_size[k]);
-				strcpy(array_text[k][l], token2);
-			}
+			array_text[i][k] = malloc(strlen(token2) + 1);
+			strcpy(array_text[i][k], token2);
 			k++;
 			token2 = strtok(NULL, " ");
 		}
+		
 	}
 	for (i = 0; i < lines_in_file; i++)
 	{
-		for (k = 0; k < save_line_size[i]; k++)
-		{
 			printf("%s\n", array_text[i][k]);
-		}
 	}
 
-	for (i = 0; i < lines_in_file; i++)
+/*	for (i = 0; i < lines_in_file; i++)
 	{
 		printf("Line %d: %s\n", i, split_text[i]);
 	}
-
+*/
 	/* STACKS START HERE , and so do mem issues */
 
 /*	for (i = 0; i < lines_in_file; i++)
