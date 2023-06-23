@@ -44,6 +44,8 @@ int main(int ac, char **av)
 	}
 
 	lines_in_file = read_file(open_file, size_of_file, file_text);
+	file_text[lines_in_file] = '\0';
+
 	save_line_size = size_by_line(open_file, lines_in_file, file_text); 
 	mem_count += 1;
 
@@ -105,10 +107,6 @@ int main(int ac, char **av)
 	mem_count += 1;
 
 	for (i = 0; i < lines_in_file; i++)
-	{
-		printf("Lines: %s\n", array_buff[i]);
-	}
-	for (i = 0; split_text[i] != NULL; i++)
 	{
 		array_buff[i] = strdup(split_text[i]);
 	}
