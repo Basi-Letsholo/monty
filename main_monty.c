@@ -7,8 +7,8 @@ int main(int ac, char **av)
 	unsigned int line_number;
 /*	stack_t **stack = NULL;*/
 	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
-	char *file_cp = NULL, *current_opcode = NULL, ***array_text = NULL;
-	char **array_buff = NULL;
+	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
+/*	char **array_buff = NULL;*/
 	off_t size_of_file;
 	struct stat file_stat;
 	int mem_count = 0; /* DELETE LATER!! USE to find out how much mem needs to be freed at each point */
@@ -65,16 +65,17 @@ int main(int ac, char **av)
 	}
 	mem_count += 1;
 
+	for (i = 0; i < lines_in_file; i++)
+	{
+		split_text[i] = NULL;
+	}
+
 	file_cp = strdup(file_text);
 	mem_count += 1;
 
 	token = strtok(file_cp, "\n");
 	mem_count+= 1;
 
-	for (i = 0; i < lines_in_file; i++)
-	{
-		split_text[i] = NULL;
-	}
 	i = 0;
 	while (token != NULL)
 	{
@@ -96,7 +97,7 @@ int main(int ac, char **av)
 		token = strtok(NULL, "\n");	
 	}
 
-	array_buff = malloc(sizeof(char *) * lines_in_file);
+/*	array_buff = malloc(sizeof(char *) * lines_in_file);
 	if (array_buff == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
@@ -112,9 +113,25 @@ int main(int ac, char **av)
 
 	for (i = 0; i < lines_in_file; i++)
 	{
-		array_buff[i] = strdup(split_text[i]);
+		array_buff[i] = NULL;
 	}
-
+	for (i = 0; i < lines_in_file; i++)
+	{
+		array_buff[i] = malloc(strlen(split_text[i]) + 1);
+		if (array_buff[i] == NULL)
+		{
+			fprintf(stderr, "Error: malloc failed\n");
+			free(file_cp);
+			free(token);
+			free(file_text);
+			free(save_line_size);
+			free_ptr(split_text);
+			close(open_file);
+			exit(EXIT_FAILURE);
+		}
+		strcpy(array_buff[i], split_text[i]);
+	}
+*/	
 	array_text = malloc(sizeof(char *) * lines_in_file);
 	if (array_text == NULL)
 	{
@@ -124,7 +141,7 @@ int main(int ac, char **av)
 		free(file_text);
 		free(save_line_size);
 		free_ptr(split_text);
-		free_ptr(array_buff);
+/*		free_ptr(array_buff);*/
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
@@ -137,8 +154,8 @@ int main(int ac, char **av)
 		token2 = strtok(split_text[i], " ");
 		while (token2 != NULL)
 		{
-			array_text[i][k] = malloc(strlen(token2) + 1);
-			strcpy(array_text[i][k], token2);
+			array_text[k] = malloc(strlen(token2) + 1);
+			strcpy(array_text[k], token2);
 			k++;
 			token2 = strtok(NULL, " ");
 		}
@@ -146,7 +163,7 @@ int main(int ac, char **av)
 	}
 	for (i = 0; i < lines_in_file; i++)
 	{
-			printf("%s\n", array_text[i][k]);
+			printf("%s\n", array_text[i]);
 	}
 
 /*	for (i = 0; i < lines_in_file; i++)
@@ -198,7 +215,7 @@ int main(int ac, char **av)
 
 	free_ptr(split_text);
 	/*free_ptr(array_text);*/
-	free_ptr(array_buff);
+/*	free_ptr(array_buff);*/
 	free(file_text);
 	free(save_line_size);
 	/* Later - write func to free everything at once */
