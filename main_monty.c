@@ -155,10 +155,15 @@ int main(int ac, char **av)
 		while (token2 != NULL)
 		{
 			array_text[k] = malloc(strlen(token2) + 1);
+			if (array_text[k] == NULL)
+			{
+				/* error handling */
+				exit(EXIT_FAILURE);
+			}
 			strcpy(array_text[k], token2);
-			k++;
 			token2 = strtok(NULL, " ");
 		}
+		k++;
 		
 	}
 	for (i = 0; i < lines_in_file; i++)
