@@ -48,7 +48,7 @@ int main(int ac, char **av)
 	mem_count += 1;
 
 	file_text[size_of_file] = '\0';
-
+	printf("%s\n", file_text);
 	split_text = malloc(sizeof(char *) * lines_in_file);
 	if (split_text == NULL)
 	{
@@ -127,7 +127,7 @@ int main(int ac, char **av)
 		strcpy(array_buff[i], split_text[i]);
 	}
 */	
-	array_text = malloc(sizeof(char *) * lines_in_file);
+	array_text = malloc(sizeof(char *) * lines_in_file * 2);
 	if (array_text == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
@@ -158,7 +158,7 @@ int main(int ac, char **av)
 			k++;
 			token2 = strtok(NULL, " ");
 		}
-		array_text[k] = NULL;
+/*		array_text[k] = NULL;*/
 	}
 	for (i = 0; i < k; i++)
 	{
@@ -212,7 +212,7 @@ int main(int ac, char **av)
 	}
 */
 
-	free_ptr(split_text);
+/*	free_ptr(split_text);*/
 	/*free_ptr(array_text);*/
 /*	free_ptr(array_buff);*/
 	free(file_text);
