@@ -162,11 +162,11 @@ int main(int ac, char **av)
 			}
 			strcpy(array_text[k], token2);
 			token2 = strtok(NULL, " ");
+			k++;
 		}
-		k++;
 		
 	}
-	for (i = 0; i < lines_in_file; i++)
+	for (i = 0; i < k; i++)
 	{
 			printf("%s\n", array_text[i]);
 	}
