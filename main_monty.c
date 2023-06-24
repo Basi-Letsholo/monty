@@ -6,6 +6,7 @@ int main(int ac, char **av)
 	size_t j;
 	unsigned int line_number;
 	stack_t *stack = NULL;
+	stack_t *current = NULL;
 	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
 	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
 	off_t size_of_file;
@@ -175,18 +176,28 @@ int main(int ac, char **av)
 		}
 	}
 */
-/*	while (*stack != NULL)
-	{
-		free(*stack);
-		*stack = (*stack)->next;
-	}
-*/
 
-/*	free_ptr(split_text);*/
-	/*free_ptr(array_text);*/
-/*	free_ptr(array_buff);*/
+	current = stack;
+	while (current != NULL)
+	{
+		free(current);
+		current = current->next;
+	}
+	for (i = 0; i < new_num_lines; i++)
+	{
+		free(array_text[i]);
+	}
+	free(array_text);
+	for (i = 0; i < lines_in_file; i++)
+	{
+		free(split_text[i]);
+	}
+	free(split_text);
 	free(file_text);
 	free(save_line_size);
+	free(token);
+	free(token2);
+	free(file_cp);
 	/* Later - write func to free everything at once */
 	close(open_file);
 

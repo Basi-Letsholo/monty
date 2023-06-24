@@ -6,11 +6,12 @@
 
 void free_ptr(char **ptr)
 {
-	int index;
+	int index = 0;
 
-	for (index = 0; ptr[index] != NULL; index++)
+	while (ptr[index] != NULL)
 	{
 		free(ptr[index]);
+		index++;
 	}
 	free(ptr);
 }
