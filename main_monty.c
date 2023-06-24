@@ -139,47 +139,13 @@ int main(int ac, char **av)
 		}
 		if (strcmp(array_text[i], "pint") == 0)
 		{
-			pint_opcode(&stack, 0);
+			pint_opcode(&stack, (i + 1));
 		}
 		else
 		{
 			i += 1;
 		}
 	}
-/*	for (i = 0; i < new_num_lines; i++)
-	{
-
-		strncpy(array_text[i], current_opcode, 4);
-
-		printf("Test!\nopcode: %s\n", current_opcode);
-
-		for (k = 0; k < new_num_lines; k++)
-		{	
-			line_number = 1;
-			for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
-			{
-				if (strcmp(current_opcode, opcodes[j].opcode) == 0)
-				{
-					 opcodes[k].f(stack, line_number);
-					 break;
-				}
-			}
-			line_number++;
-
-		}
-	}
-*/
-/*	current_opcode = "pall";
-	for (j = 0; j < sizeof(opcodes) / sizeof(opcodes[0]); j++)
-                 {       
-                        if (strcmp(current_opcode, opcodes[i].opcode) == 0)
-			{        
-                                  opcodes[i].f(stack, line_number);
-                                  break;
-                         }
-		}
-	}
-*/
 
 	current = stack;
 	while (current != NULL)
