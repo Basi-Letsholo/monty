@@ -133,15 +133,15 @@ int main(int ac, char **av)
 		{
 			push_opcode(&stack, atoi(array_text[i + 1]));
 		}
-		else if (strcmp(array_text[i], "pall") == 0)
+		if (strcmp(array_text[i], "pall") == 0)
 		{
 			pall_opcode(&stack, 0);
 		}
-		else if (strcmp(array_text[i], "pint") == 0)
+		if (strcmp(array_text[i], "pint") == 0)
 		{
 			pint_opcode(&stack, (i + 1));
 		}
-		else if (strcmp(array_text[i], "pop") == 0)
+		if (strcmp(array_text[i], "pop") == 0)
 		{
 			pop_opcode(&stack, (i + 1));
 		}

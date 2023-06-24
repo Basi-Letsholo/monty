@@ -26,7 +26,6 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 		(*stack)->prev = new;
 	}
 	*stack = new;
-	printf("Test\n");
 }
 
 /**
@@ -97,6 +96,6 @@ void pop_opcode(stack_t **stack, unsigned int line_number)
 		*stack = NULL;
 		return;
 	}
-	current = current->next->next;
-	current->prev = NULL;
+	*stack = (*stack)->next;
+	(*stack)->prev = NULL;
 }
