@@ -130,6 +130,7 @@ int main(int ac, char **av)
 
 	/* STACKS START HERE , and so do mem issues */
 
+	stack = NULL;
 	for (i = 0; i < new_num_lines; i++)
 	{
 		if (strcmp(array_text[i], "push") == 0)

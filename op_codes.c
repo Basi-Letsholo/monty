@@ -9,7 +9,7 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new;
 
-	new = (stack_t *)malloc(sizeof(stack_t));
+	new = malloc(sizeof(stack_t));
 	if (new == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
@@ -44,16 +44,18 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 
 void pall_opcode(stack_t **stack, unsigned int line_number)
 {
+	stack_t *current;
 	(void)line_number;
 
-	if (*stack == NULL)
+	current = *stack;
+	if (current == NULL)
 	{
 		return;
 	}
 
-	while (*stack != NULL)
+	while (current != NULL)
 	{
-		printf("%d\n", (*stack)->n);
-		*stack = (*stack)->next;
+		printf("%d\n", current->n);
+		current = current->next;
 	}
 }
