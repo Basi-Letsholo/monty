@@ -26,22 +26,14 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 		(*stack)->prev = new;
 	}
 	*stack = new;
-
-/*	if (*stack == new)
-	{
-		return (*stack);
-	}*/
+	printf("Test\n");
 }
 
 /**
- * to Use func:
- * instruction_t opcode_instruction = 
-   {
-    .opcode = "OPCODE_NAME",
-    .f = opcode_func
-    };
-*/
-
+ * pall_opcode - prints current stack
+ * @stack: stack
+ * @line_number: line number of command
+ */
 
 void pall_opcode(stack_t **stack, unsigned int line_number)
 {
@@ -61,6 +53,11 @@ void pall_opcode(stack_t **stack, unsigned int line_number)
 	}
 }
 
+/**
+ * pint_opcode - prints top stack
+ * @stack: stack
+ * @line_number: line number
+ */
 
 void pint_opcode(stack_t **stack, unsigned int line_number)
 {
@@ -72,8 +69,34 @@ void pint_opcode(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
 		/* Free mem */
 		/*exit(EXIT_FAILURE);*/
-		return;
+		exit(EXIT_FAILURE);
 	}
 
 	printf("%d\n", current->n);
+}
+
+/**
+ * pop_opcode - deletes top element form stack
+ * @stack: stack
+ * @line_number: line_number
+ */
+
+void pop_opcode(stack_t **stack, unsigned int line_number)
+{
+	stack_t *current = NULL;
+
+	current = *stack;
+	if (current == NULL)
+	{
+		fprintf(stderr, "L%d: can't pop an empty stack\n", line_number);
+		/* FREE MEM */
+		exit(EXIT_FAILURE);
+	}
+	if (current->next == NULL)
+	{
+		*stack = NULL;
+		return;
+	}
+	current = current->next->next;
+	current->prev = NULL;
 }
