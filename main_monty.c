@@ -137,6 +137,10 @@ int main(int ac, char **av)
 		{
 			pall_opcode(&stack, 0);
 		}
+		if (strcmp(array_text[i], "pint") == 0)
+		{
+			pint_opcode(&stack, 0);
+		}
 		else
 		{
 			i += 1;

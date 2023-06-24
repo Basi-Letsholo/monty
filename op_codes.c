@@ -60,3 +60,33 @@ void pall_opcode(stack_t **stack, unsigned int line_number)
 		current = current->next;
 	}
 }
+
+
+void pint_opcode(stack_t **stack, unsigned int line_number)
+{
+	stack_t *current = NULL;
+
+	current = *stack;
+	if (current == NULL)
+	{
+		fprintf(stderr, "L%d: can't pint, stack empty", line_number);
+		/* Free mem */
+		exit(EXIT_FAILURE);
+	}
+
+/*	while (current != NULL)
+	{
+		current = current->next;
+		stack_len++;
+*/	
+/*	if (stack_len == 1)
+	{
+		printf("%d\n", current->n);
+		return;
+	}
+	for (i = 1; i < stack_len; i++)
+	{
+		current = current->prev;
+*/	
+	printf("%d\n", current->n);
+}
