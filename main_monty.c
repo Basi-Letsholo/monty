@@ -5,7 +5,7 @@ int main(int ac, char **av)
 	int open_file, lines_in_file = 0, i = 0, k, *save_line_size = NULL, new_num_lines;
 	size_t j;
 	unsigned int line_number;
-	stack_t **stack = NULL;
+	stack_t *stack = NULL;
 	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
 	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
 	off_t size_of_file;
@@ -123,24 +123,18 @@ int main(int ac, char **av)
 		}
 	}
 	new_num_lines = k;
-	for (i = 0; i < new_num_lines; i++)
-	{
-		printf("%s\n", array_text[i]);
-	}
 
 	/* STACKS START HERE , and so do mem issues */
 
-	stack = NULL;
 	for (i = 0; i < new_num_lines; i++)
 	{
 		if (strcmp(array_text[i], "push") == 0)
 		{
-			push_opcode(stack, atoi(array_text[i + 1]));
-			i += 1;
+			push_opcode(&stack, atoi(array_text[i + 1]));
 		}
-		else if (strcmp(array_text[i], "pall") == 0)
+		if (strcmp(array_text[i], "pall") == 0)
 		{
-			 pall_opcode(stack, 0);
+			pall_opcode(&stack, 0);
 		}
 		else
 		{

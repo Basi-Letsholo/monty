@@ -13,6 +13,7 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 	if (new == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
+		/* FREE MEM */
 		exit(EXIT_FAILURE);
 	}
 
@@ -44,7 +45,7 @@ void push_opcode(stack_t **stack, unsigned int line_number)
 
 void pall_opcode(stack_t **stack, unsigned int line_number)
 {
-	stack_t *current;
+	stack_t *current = NULL;
 	(void)line_number;
 
 	current = *stack;
