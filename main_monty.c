@@ -4,7 +4,7 @@ int main(int ac, char **av)
 {
 	int open_file, lines_in_file = 0, i = 0, k, *save_line_size = NULL, new_num_lines;
 	size_t j;
-	unsigned int line_number;
+	unsigned int line_number = 1;
 	stack_t *stack = NULL;
 	stack_t *current = NULL;
 	char *file_text = NULL, *token = NULL, *token2 = NULL, **split_text = NULL;
@@ -18,7 +18,6 @@ int main(int ac, char **av)
 	};*/
 	/* init vars */
 	(void)j;
-	(void)line_number;
 	(void)current_opcode;
 
 	if (ac != 2)
@@ -132,22 +131,50 @@ int main(int ac, char **av)
 		if (strcmp(array_text[i], "push") == 0)
 		{
 			push_opcode(&stack, atoi(array_text[i + 1]));
+			i += 1;
+			line_number += 1;
 		}
-		if (strcmp(array_text[i], "pall") == 0)
+		else if (strcmp(array_text[i], "pall") == 0)
 		{
 			pall_opcode(&stack, 0);
+			line_number += 1;
 		}
-		if (strcmp(array_text[i], "pint") == 0)
+		else if (strcmp(array_text[i], "pint") == 0)
 		{
-			pint_opcode(&stack, (i + 1));
+			pint_opcode(&stack, line_number);
+			line_number += 1;
 		}
-		if (strcmp(array_text[i], "pop") == 0)
+		else if (strcmp(array_text[i], "pop") == 0)
 		{
-			pop_opcode(&stack, (i + 1));
+			pop_opcode(&stack, line_number);
+			line_number += 1;
 		}
 		else
 		{
-			i += 1;
+			fprintf(stderr, "L%d: unknown instruction %s\n", line_number, array_text[i]);
+			current = stack;
+			while (current != NULL)
+			{
+				free(current);
+				current = current->next;
+			}
+			for (i = 0; i < new_num_lines; i++)
+			{
+				free(array_text[i]);
+			}
+			free(array_text);
+			for (i = 0; i < lines_in_file; i++)
+			{
+				free(split_text[i]);
+			}
+			free(split_text);
+			free(file_text);
+			free(save_line_size);
+			free(token);
+			free(token2);
+			free(file_cp);
+			close(open_file);
+			exit(EXIT_FAILURE);
 		}
 	}
 
