@@ -11,7 +11,6 @@ int main(int ac, char **av)
 	char *file_cp = NULL, *current_opcode = NULL, **array_text = NULL;
 	off_t size_of_file;
 	struct stat file_stat;
-	int mem_count = 0; /* DELETE LATER!! USE to find out how much mem needs to be freed at each point */
 /*	instruction_t opcodes[] = { 
 	{"push", push_opcode},
 	{"pall", pall_opcode}
@@ -34,7 +33,6 @@ int main(int ac, char **av)
 	}
 
 	file_text = malloc(size_of_file + 1);
-	mem_count += 1;
 	if (file_text == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
@@ -44,7 +42,6 @@ int main(int ac, char **av)
 
 	lines_in_file = read_file(open_file, size_of_file, file_text);
 	save_line_size = size_by_line(open_file, lines_in_file, file_text); 
-	mem_count += 1;
 
 	file_text[size_of_file] = '\0';
 	split_text = malloc(sizeof(char *) * lines_in_file);
@@ -56,7 +53,6 @@ int main(int ac, char **av)
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
-	mem_count += 1;
 
 	for (i = 0; i < lines_in_file; i++)
 	{
@@ -64,10 +60,8 @@ int main(int ac, char **av)
 	}
 
 	file_cp = strdup(file_text);
-	mem_count += 1;
 
 	token = strtok(file_cp, "\n");
-	mem_count+= 1;
 
 	i = 0;
 	while (token != NULL)
@@ -99,11 +93,9 @@ int main(int ac, char **av)
 		free(file_text);
 		free(save_line_size);
 		free_ptr(split_text);
-/*		free_ptr(array_buff);*/
 		close(open_file);
 		exit(EXIT_FAILURE);
 	}
-	mem_count += 1;
 
 	k = 0;
 	for (i = 0; i < lines_in_file; i++)
@@ -130,6 +122,7 @@ int main(int ac, char **av)
 	{
 		if (strcmp(array_text[i], "push") == 0)
 		{
+			if (atoi(array_text[i + 1])
 			push_opcode(&stack, atoi(array_text[i + 1]));
 			i += 1;
 			line_number += 1;
@@ -203,5 +196,4 @@ int main(int ac, char **av)
 	close(open_file);
 
 	return (0);
-	/* change later?? */
 }
